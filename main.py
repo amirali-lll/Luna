@@ -12,6 +12,7 @@ def main():
             print("Please enter a valid input.")
             continue
         print("Assistant>/", agent.chat(user_input))
+        print("Conversation History:", agent.messages)
 
 if __name__ == "__main__":
     main()
