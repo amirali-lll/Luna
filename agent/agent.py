@@ -30,14 +30,14 @@ class Agent:
         
     def execute_tool_call(self, tool_call):
         """Execute a tool call and return the result."""
-        function_name = tool_call.function.name  
+        function_name = tool_call['function']['name']
         try:
-            if tool_call.function.arguments:
-                function_args = json.loads(tool_call.function.arguments)
+            if tool_call['function']['arguments']:
+                function_args = json.loads(tool_call['function']['arguments'])
             else:
                 function_args = {}
         except json.JSONDecodeError:
-            print(f"Warning: Invalid JSON in tool call arguments: {tool_call.function.arguments}")
+            print(f"Warning: Invalid JSON in tool call arguments: {tool_call['function']['arguments']}")
             function_args = {}
         
         if function_name in self.tool_functions:
@@ -57,7 +57,7 @@ class Agent:
                 {
                     "role": "tool",
                     "content": tool_result,
-                    "tool_call_id": tool_call.id
+                    "tool_call_id": tool_call['id']
                 }
             )
         return results
@@ -105,7 +105,7 @@ class Agent:
 
         while True:
             accumulated_content = ""
-            tool_calls = None
+            tool_calls = []
 
             # Stream until tool call or end
             async for chunk in streaming_completion(self.messages, self.tools):
@@ -113,8 +113,7 @@ class Agent:
                     accumulated_content += chunk
                     yield chunk
                 elif isinstance(chunk, list):
-                    tool_calls = chunk
-                    break
+                    tool_calls.extend(chunk)
 
             if tool_calls:
                 # Add the assistant's message with tool calls
