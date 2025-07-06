@@ -16,9 +16,7 @@ class Agent:
         # Add system message to make AI more conversational about tool usage
         self.add_message("system", 
             "You are Luna, a helpful AI assistant. When you need to use tools to answer questions, "
-            "be conversational and natural. For example, if someone asks for the time, you can say something like "
-            "'Let me check the current time for you' before using the time tool. After getting the result, "
-            "provide a friendly response with the information."
+            "Before using any tool, always acknowledge the user's request and explain what you are doing. "
         )
         
     def add_message(self, role: str, content: str, tool_calls=None):
