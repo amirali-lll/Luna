@@ -1,7 +1,6 @@
-from .tools import built_in_tools, get_tool_functions
-from .chats import completion, streaming_completion
+from .tools import get_tool_functions, get_tools
+from .api.completion import completion, streaming_completion
 import json
-import asyncio
 from typing import AsyncGenerator
 
 
@@ -10,7 +9,7 @@ class Agent:
         self.name = name
         self.tools = []
         self.messages = []
-        self.tools.extend(built_in_tools)
+        self.tools.extend(get_tools())
         self.tool_functions = get_tool_functions()
         
         # Add system message to make AI more conversational about tool usage
