@@ -1,13 +1,14 @@
-from .clients import openai_client, async_openai_client
+from .clients import *
+from typing import List, Dict, AsyncGenerator, Union
 from typing import List, Dict, AsyncGenerator
-import asyncio
 
-model = "gpt-4.1-mini-2025-04-14"
+
+default_model = "gpt-4.1-mini-2025-04-14"
 
 
 def completion(messages: List[Dict[str, str]] = [], tools: List[Dict] = None):
     kwargs = {
-        "model": model,
+        "model": default_model,
         "messages": messages
     }
     
@@ -19,7 +20,12 @@ def completion(messages: List[Dict[str, str]] = [], tools: List[Dict] = None):
     return response.choices[0].message
 
 
-async def streaming_completion(messages: List[Dict[str, str]] = [], tools: List[Dict] = None) -> AsyncGenerator[str, None]:
+async def streaming_completion(
+    messages: List[Dict[str, str]] = [],
+    tools: List[Dict] = None,
+    model: str = default_model,
+    client: Union[AsyncOpenAI, OpenAI] = async_openai_client
+) -> AsyncGenerator[str, None]:
     """Stream completion response asynchronously."""
     kwargs = {
         "model": model,
@@ -30,9 +36,9 @@ async def streaming_completion(messages: List[Dict[str, str]] = [], tools: List[
     if tools:
         kwargs["tools"] = tools
         kwargs["tool_choice"] = "auto"
-    
-    stream = await async_openai_client.chat.completions.create(**kwargs)
-    
+
+    stream = await client.chat.completions.create(**kwargs)
+
     accumulated_tool_calls = {}
     
     async for chunk in stream:
