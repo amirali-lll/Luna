@@ -1,30 +1,28 @@
 from agent.agent import Agent
+from interfaces import create_terminal_interface
 import asyncio
 import sys
-import readline
 
 
 async def main():
-    print("Welcome to your AI agent! Type 'exit' to quit.")
+    terminal = create_terminal_interface()
+    await terminal.send_welcome_message()
+    
     agent = Agent("Luna")
     
     while True:
-        user_input = input("\nYou>/ ")
-        if user_input.strip().lower() == "exit":
-            break
-        if not user_input.strip():
-            print("Please enter a valid input.")
-            continue
-        # Add to readline history for up/down navigation
-        readline.add_history(user_input)
-
-        print("Assistant>/ ", end="", flush=True)
-
-        # Stream the response
-        async for chunk in agent.stream_chat(user_input):
-            print(chunk, end="", flush=True)
+        user_input = await terminal.get_input()
         
-        print("\n")  # Add newline after streaming is complete
+        if user_input.lower() == "exit":
+            await terminal.send_goodbye_message()
+            break
+        
+        if not user_input:
+            await terminal.output.send_info("Please enter a valid input.")
+            continue
+        
+        response_stream = agent.stream_chat(user_input)
+        await terminal.stream_output(response_stream)
 
 
 def sync_main():
