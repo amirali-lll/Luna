@@ -17,8 +17,8 @@ async def main() -> None:
     async with openai.audio.speech.with_streaming_response.create(
         model="gpt-4o-mini-tts",
         voice="nova",
-        input="Today is a wonderful day to build something people love!",
-        instructions="Speak in a negative tone and use a slow pace and cry a little bit.",
+        input="Hi there! How are you doing today?",
+        instructions="Speak in Persian with Iranian accent. Use a friendly and engaging tone.Speak casually and naturally.",
         response_format="pcm",
     ) as response:
         await LocalAudioPlayer().play(response)

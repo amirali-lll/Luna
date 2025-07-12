@@ -1,3 +1,19 @@
 openai
 python-dotenv
-mcp 
+mcp
+
+# Voice capabilities - Phase 1: Simple API-based
+pyaudio
+numpy
+pydub
+
+# Voice capabilities - Phase 2: Advanced VAD and Wake Word
+webrtcvad
+pvporcupine
+
+# Web capabilities (for Phase 3)
+fastapi
+uvicorn
+websockets
+uvicorn
+websockets
