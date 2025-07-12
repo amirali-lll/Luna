@@ -2,7 +2,12 @@ from .tools import get_tool_functions, get_tools
 from .api.completion import completion, streaming_completion
 import json
 from typing import AsyncGenerator
+from .api.clients import groq_client
 
+
+client = groq_client
+model = "deepseek-r1-distill-llama-70b"
+model = "meta-llama/llama-4-scout-17b-16e-instruct"
 
 class Agent:
     def __init__(self, name: str):
@@ -105,7 +110,7 @@ class Agent:
             tool_calls = []
 
             # Stream until tool call or end
-            async for chunk in streaming_completion(self.messages, self.tools):
+            async for chunk in streaming_completion(self.messages, self.tools, model=model, client=client):
                 if isinstance(chunk, str):
                     accumulated_content += chunk
                     yield chunk
